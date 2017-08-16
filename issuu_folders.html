@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <title>KBA Journal Listings</title>
+  <!-- https://gist.github.com/Daltonmedia/1d82948f5d5bb3ddd825 -->
+  <link rel="stylesheet" href="./resource/resmgr/Journal/issuu/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="https://static.isu.pub/uic/460/dist/css/ui-components.min.css" type="text/css" />
+  <link rel="stylesheet" href="./resource/resmgr/css/style.css" type="text/css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+  <!-- Mobile Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- https://github.com/placemarker/jQuery-MD5 -->
+  <script src="./resource/resmgr/Journal/issuu/js/jquery.md5.js"></script>
+  <script src="./resource/resmgr/Journal/issuu/js/md5.js"></script>
+  <!-- <script src="https://www.myersdaily.org/joseph/javascript/md5.js"></script> -->
+  <script src="./resource/resmgr/Journal/issuu/js/moment.min.js"></script>
+  <script src="./resource/resmgr/Journal/issuu/js/moment-timezone-with-data-2012-2022.js"></script>
+  <script src="./resource/resmgr/Journal/issuu/js/kba.issuu.folders.js"></script>
+
+</head>
+
+<body>
+  <header class="container">
+    <h1>KS Bar Association Issuu Publications</h1>
+  </header>
+  <section id="mainContent" class="container">
+    <label for="publication-count">Count</label>
+    <select id="publication-count" onchange="loadLists()">
+      <option value="1">1</option>
+      <option value="10" selected>10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+      <option value="25">25</option>
+      <option value="30">30</option>
+    </select>
+    <select id="stackOrder" onchange="loadLists()" style="float: right;">
+      <option value="asc">A -> Z</option>
+      <option value="desc" >Z -> A</option>
+      </select>
+    <select id="stackSort" onchange="loadLists()" style="float: right;">
+      <option value="name">Name</option>
+      <option value="created">Created</option>
+      <!-- <option value="description">Description</option>
+      <option value="folderId">Folder ID</option>
+      <option value="items">Items</option>
+      <option value="username">Username</option> -->
+    </select>
+
+    <a name="stacks"></a>
+    <h2>Stacks</h2>
+    <div id="stream-list-folder" class="stream-list ui-stream">
+
+    </div>
+    <a name="bookmarks"></a>
+    <div id="bookmarks-wrap" class="hidden">
+      <h2>Bookmarks</h2>
+      <div id="stream-list-bookmarks" class="stream-list ui-stream">
+      </div>
+    </div>
+  </section>
+  <div id="footer" class="container">
+    &copy; 2017 | <a href="http://www.ksbar.org/" target="_blank">Kansas Bar Association</a>
+
+  </div>
+</body>
+
+</html>

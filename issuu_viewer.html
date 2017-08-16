@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <title>KBA Journal Listings</title>
+
+  <link rel="stylesheet" href="resource/resmgr/api/issuu/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="https://static.isu.pub/uic/460/dist/css/ui-components.min.css" type="text/css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+  <!-- https://github.com/placemarker/jQuery-MD5 -->
+  <script src="resource/resmgr/api/issuu/js/jquery.md5.js"></script>
+  <script src="resource/resmgr/api/issuu/js/md5.js"></script>
+  <!--
+<script src="https://www.myersdaily.org/joseph/javascript/md5.js"></script>
+-->
+  <script type="text/javascript">
+    /* global $ */
+    var map, apiKey, apiSecret, signature, sigFormula, documentStates, DocumentSortBy, webhook, action, format, pageSize, startIndex, URI, full_url, str, volume, access, responseParams, resultOrder, DocumentSortBy;
+    $(document).ready(function () {
+
+      /* http://developers.issuu.com/signing-requests/ */
+      webhook = "https://api.issuu.com/1_0?";
+      action = "issuu.documents.list";
+      apiKey = "78zlafx4x3pgyed8ebyeqz276s4p40lw";
+      apiSecret = "vf8ojy3rzn71r2af8ioqdycg1x8i4yr6";
+      access = "public";
+      DocumentSortBy = "publishDate"; //"DocumentSortBy=publishDate"; //"&resultOrder=desc";
+      documentStates = ""; // A, F, P
+      format = "json";
+      pageSize = "30"; //default is 10; 30 is max to return
+      startIndex = "";
+      responseParams = "description,documentId,DocumentSortBy,publicationId,folders,publishDate,title,tags";
+
+
+
+
+      sigFormula = apiSecret + "access" + access + "action" + action + "apiKey" + apiKey + "format" + format + "pageSize" + pageSize + "responseParams" + responseParams + "DocumentSortBy" + DocumentSortBy;
+      //vf8ojy3rzn71r2af8ioqdycg1x8i4yr6accesspublicactionissuu.documents.listapiKey78zlafx4x3pgyed8ebyeqz276s4p40lwformatjsonresponseParamstitle,description,documentId
+
+      signature = $.md5(sigFormula);
+      console.log(sigFormula + " " + signature);
+      //5caada84f3222c7e64f4abccc05645ee
+
+      URI = webhook + "action=" + action + "&apiKey=" + apiKey + "&access=" + access + "&pageSize=" + pageSize + "&responseParams=" + responseParams + "&DocumentSortBy=" + DocumentSortBy + "&format=" + format + "&signature=" + signature;
+      // should be: e28dbc4c92a82dc30e306add0aa38e8d
+      //&resultOrder=desc
+
+      /*
+      "https://api.issuu.com/1_0?action=issuu.documents.list \
+      &apiKey=78zlafx4x3pgyed8ebyeqz276s4p40lw \
+      &access=public \
+      &documentStates=A \
+      &responseParams=&responseParams=name,documentId,title \
+      &format=json \
+      &signature=2574c35d06b67131f81b09c5b4270891";
+      */
+
+      // "https://api.issuu.com/1_0", { access: "public", responseParams: "documentID,title,description", signature: "e28dbc4c92a82dc30e306add0aa38e8d", action: "get", format: "json" }
+      $.get(URI)
+        .done(function (data) {
+          console.log("API data:");
+          console.log(data);
+          $("issuu-div0")
+            .append("Title: " + data.title) // John
+            //.append( "Description: " + data.description ); //  2pm
+          console.log(data);
+        }, "json");
+
+
+      $.get(URI).done(function (data) {
+        console.log("API data:");
+        console.log(data);
+        /*
+        $( "#issuu-div0" )
+          .append( " <b>Title:</b> " + data.rsp._content.result._content["0"].document.title + "<br>")
+          .append( " <b>Description:</b> " + data.rsp._content.result._content["0"].document.description + "<br>" )
+          .append( " <b>Document ID:</b> " + data.rsp._content.result._content["0"].document.documentID );
+          $( "#issuu-div1" )
+          .append( " <b>Title:</b> " + data.rsp._content.result._content["1"].document.title + "<br>")
+          .append( " <b>Description:</b> " + data.rsp._content.result._content["1"].document.description + "<br>" )
+          .append( " <b>Document ID:</b> " + data.rsp._content.result._content["1"].document.documentID );
+        $( "#issuu-div2" )
+          .append( " <b>Title:</b> " + data.rsp._content.result._content["2"].document.title + "<br>")
+          .append( " <b>Description:</b> " + data.rsp._content.result._content["2"].document.description + "<br>" )
+          .append( " <b>Document ID:</b> " + data.rsp._content.result._content["2"].document.documentID );
+         */
+        for (var i = 0; i < 10; i++) {
+          var divID, row;
+          divID = "#issuu-div" + i;
+
+          $(divID).append(' <img src="https://image.issuu.com/' + data.rsp._content.result._content[i].document.documentId + '/jpg/page_1_thumb_large.jpg" class="iconJrnl">');
+          $(divID).append(' <h3 class="title">' + data.rsp._content.result._content[i].document.title + '</h3>');
+          $(divID).append(' <p class="description"> ' + data.rsp._content.result._content[i].document.description + '</p>');
+          //$(divID).append( ' <b>Document ID:</b> ' + data.rsp._content.result._content[i].document.documentId + '<br>');
+          $(divID).append(' <b>Published:</b> ' + data.rsp._content.result._content[i].document.publishDate + '<br>');
+          $(divID).append(' <b>Tags:</b> ' + data.rsp._content.result._content[i].document.tags + '<br>');
+          $(divID).append(' <b>Folders:</b> ' + data.rsp._content.result._content[i].document.folders + '<br>');
+          //console.log(title);
+        }
+
+      }, "json");
+      /*
+          $.get( "http://feed.issuu.com/folder/6c8bcc488239400ca429e9702dfaca60/rss20.jsonp" ).done(function( data ) {
+            console.log("Feed data:" + data);
+            $( "#issuu-div0" )
+              .append( "<h2>Title:</h2>" + data.title + "<br>") // John
+              .append( " Description: " + data.description ); //  2pm
+          }, "json" );
+      */
+      getVolume();
+    });
+
+    function getVolume() {
+      console.log("getVolume was called");
+      $("#issuu-div1-em").empty();
+      $("#issuu-div2-em").empty();
+      $("#issuu-div3-em").empty();
+      $("#issuu-div4-em").empty();
+      $("#issuu-div5-em").empty();
+      $("#issuu-div6-em").empty();
+      $("#issuu-div7-em").empty();
+      $("#issuu-div8-em").empty();
+      $("#issuu-div9-em").empty();
+      $("#issuu-div10-em").empty();
+
+      str = document.getElementById("volume_option");
+      //var strVol = str.options[str.selectedIndex].value;
+      //console.log("str:" + str);
+      var strVol = str.value;
+      volume = strVol.split("_");
+      //console.log("volume:" + volume);
+      //http://image.issuu.com/<documentId>/jpg/page_<page>_thumb_small.jpg
+
+      full_url = "https://issuu.com/oembed?url=https%3A%2F%2Fissuu.com%2Fksbar%2Fdocs%2F" + volume[0] + "01_" + volume[1] + "_jrnl?&format=json";
+      //
+      console.log(full_url);
+      $.get("https://issuu.com/oembed?url=https%3A%2F%2Fissuu.com%2Fksbar%2Fdocs%2F" + volume[0] + "01_" + volume[1] + "_jrnl?&format=json")
+        .done(function (data) {
+          $("#issuu-div1-em")
+            .append("<a href='" + data.thumbnail_url + "' target='_blank'><img src='" + data.thumbnail_url + "' class='issuu-tn' /></a>")
+            .append("<span class='issuu-title'>" + data.title + "</span><br>")
+            .append("<span class='issuu-description'> " + data.description + "</span>");
+          //.append( "<div class='issuu-viewer'>" + data.html + "</div>" );
+          console.log("full_url (1): " + data);
+        }, "json");
+
+      $.get("https://issuu.com/oembed?url=https%3A%2F%2Fissuu.com%2Fksbar%2Fdocs%2F" + volume[0] + "02_" + volume[1] + "_jrnl?&format=json")
+        .done(function (data) {
+          $("#issuu-div2-em")
+            .append("<a href='" + data.thumbnail_url + "' target='_blank'><img src='" + data.thumbnail_url + "' class='issuu-tn' /></a>")
+            .append("<span class='issuu-title'>" + data.title + "</span><br>")
+            .append("<span class='issuu-description'> " + data.description + "</span>");
+          //.append( "<div class='issuu-viewer'>" + data.html + "</div>" );
+          console.log("full_url (2): " + data);
+        }, "json");
+
+      $.get("https://issuu.com/oembed?url=https%3A%2F%2Fissuu.com%2Fksbar%2Fdocs%2F" + volume[0] + "03_" + volume[1] + "_jrnl?&format=json")
+        .done(function (data) {
+          $("#issuu-div3-em")
+            .append("<a href='" + data.thumbnail_url + "' target='_blank'><img src='" + data.thumbnail_url + "' class='issuu-tn' /></a>")
+            .append("<span class='issuu-title'>" + data.title + "</span><br>")
+            .append("<span class='issuu-description'> " + data.description + "</span>");
+          //.append( "<div class='issuu-viewer'>" + data.html + "</div>" );
+          console.log("full_url (3): " + data);
+        }, "json");
+
+      $.get("https://issuu.com/oembed?url=https%3A%2F%2Fissuu.com%2Fksbar%2Fdocs%2F" + volume[0] + "04_" + volume[1] + "_jrnl?&format=json")
+        .done(function (data) {
+          $("#issuu-div4-em")
+            .append("<a href='" + data.thumbnail_url + "' target='_blank'><img src='" + data.thumbnail_url + "' class='issuu-tn' /></a>")
+            .append("<span class='issuu-title'>" + data.title + "</span><br>")
+            .append("<span class='issuu-description'> " + data.description + "</span>");
+          //.append( "<div class='issuu-viewer'>" + data.html + "</div>" );
+          console.log("full_url (4): " + data);
+        }, "json");
+
+    }
+
+
+
+    //google.maps.event.addDomListener(window, 'load', initialize);
+  </script>
+
+</head>
+
+<body>
+  <div id="mainContent" class="container">
+    <h2>API Attempt</h2>
+    <div id="api-attempt"></div>
+    <div class="example">
+      <div id="issuu-div0"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div1"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div2"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div3"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div4"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div5"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div6"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div7"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div8"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div9"></div>
+    </div>
+
+    <div class="example">
+      <div id="issuu-div10"></div>
+    </div>
+
+    <section class="js-stream ui-stream stream-list" style="height: 1241px;">
+      <div class="publication white ready" data-docid="161129204324-361bfbbd0bebb87f920f81140334d10c" id="streamElm2" style="left: 0px; top: 0px;">
+        <div class="publication-content">
+          <a href="/KSBar/docs/8510_2016_jrnl" style="height:287px" class="cover">
+            <img src="https://image.isu.pub/161129204324-361bfbbd0bebb87f920f81140334d10c/jpg/page_1_thumb_large.jpg" style="height:287px">
+            <span class="hint" style="line-height:287px;">Read now</span>
+          </a>
+          <a class="delete-doc issuuicons" href="javascript:void(0);">d</a>
+          <div class="metadata">
+            <h3 class="title"><a href="/KSBar/docs/8510_2016_jrnl" class="unstyled type-discreet" tabindex="-1">November/December 2016 Journal</a></h3>
+            <p class="ownername">
+              <a href="/KSBar">Kansas Bar Association</a>
+            </p>
+            <p class="description">
+              <a href="/KSBar/docs/8510_2016_jrnl" class="unstyled" tabindex="-1">Vol. 85 • No. 10</a>
+            </p>
+          </div>
+        </div>
+
+    </section>
+
+    <select id="volume_option" onchange="getVolume()">
+  <option value="86_2017" selected>2017 (vol. 86)</option>
+  <option value="85_2016">2016 (vol. 85)</option>
+  <option value="84_2015">2015 (vol. 84)</option>
+  <option value="83_2014">2014 (vol. 83)</option>
+  <option value="82_2013">2013 (vol. 82)</option>
+  <option value="81_2012">2012 (vol. 81)</option>
+  <option value="80_2011">2011 (vol. 80)</option>
+  <option value="79_2010">2010 (vol. 79)</option>
+  <option value="78_2009">2009 (vol. 78)</option>
+  <option value="77_2008">2008 (vol. 77)</option>
+  <option value="76_2007">2007 (vol. 76)</option>
+  <option value="75_2006">2006 (vol. 75)</option>
+</select>
+    <select id="issue-option">
+  <option value="">All</option>
+  <option value="10">No. 10</option>
+  <option value="09">No. 9</option>
+  <option value="08">No. 8</option>
+  <option value="07">No. 7</option>
+  <option value="06">No. 6</option>
+  <option value="05">No. 5</option>
+  <option value="04">No. 4</option>
+  <option value="03">No. 3</option>
+  <option value="02">No. 2</option>
+  <option value="01">No. 1</option>
+</select>
+
+    <div id="stack">
+      <h3><a href="http://oembed.com/" target="_blank">oEmbed</a></h3>
+      <div class="example">
+        <div id="issuu-div1-em"></div>
+      </div>
+
+      <div class="example">
+        <h3></h3>
+        <div id="issuu-div2-em">
+          <!-- <img src="http://image.issuu.com/8602_2017_jrnl/jpg/page_1_thumb_small.jpg"> --></div>
+      </div>
+
+      <div class="example">
+        <h3></h3>
+        <div id="issuu-div3-em"></div>
+      </div>
+
+      <div class="example">
+        <h3></h3>
+        <div id="issuu-div4-em"></div>
+      </div>
+
+
+
+    </div>
+    <div class="example">
+      <h3>Feed Example</h3>
+      <p>http://feed.issuu.com/folder/
+        <folderId>/rss20.jsonp</p>
+      <div id="issuu-div3"></div>
+    </div>
+
+    <p>Src: <a href="https://developers.issuu.com/" target="_blank">http://developers.issuu.com/</a></p>
+    <p>API Endpoint:</p>
+    <pre>
+http://api.issuu.com/1_0?apiKey=apiKey&signature=signature&action=method
+</pre>
+    <p>Method = GET || POST</p>
+
+    <!-- <link rel="alternate" type="application/json+oembed" href="https://issuu.com/oembed?url=https%3A%2F%2Fissuu.com%2Fiscience%2Fdocs%2Fissue23&format=json" title="I, Science - Issue 23 (Winter 2012/13)">
+<link rel="alternate" type="text/xml+oembed" href="https://issuu.com/oembed?url=https%3A%2F%2Fissuu.com%2Fiscience%2Fdocs%2Fissue23&format=xml" title="I, Science - Issue 23 (Winter 2012/13)">
+
+-->
+    <!--
+<form action="https://api.issuu.com/1_0" enctype="multipart/form-data" method="post">
+  <input type="hidden" name="action" value="issuu.document.upload"/>
+  <input type="hidden" name="apiKey" value="qyy6ls1qv15uh9xwwlvk853u2uvpfka7"/>
+  <input type="hidden" name="name" value="racing"/>
+  <input type="hidden" name="title" value="Race Cars"/>
+  <input type="hidden" name="signature" value="810b910ed5c8a53d704fd062a6001b22"/>
+  <input type="file" name="file"/>
+  <input type="submit" name="_upload" value="Upload"/>
+</form>
+
+-->
+
+    </div>
+</body>
+
+</html>

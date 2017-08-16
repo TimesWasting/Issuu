@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <title>KBA Journal Listings</title>
+  <!-- https://gist.github.com/Daltonmedia/1d82948f5d5bb3ddd825 -->
+  <link rel="stylesheet" href="./resource/resmgr/Journal/issuu/css/style.css" type="text/css" />
+  <link rel="stylesheet" href="https://static.isu.pub/uic/460/dist/css/ui-components.min.css" type="text/css" />
+  <link rel="stylesheet" href="./resource/resmgr/css/style.css" type="text/css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+  <!-- Mobile Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- https://github.com/placemarker/jQuery-MD5 -->
+  <script src="./resource/resmgr/Journal/issuu/js/jquery.md5.js"></script>
+  <script src="./resource/resmgr/Journal/issuu/js/md5.js"></script>
+  <!-- <script src="https://www.myersdaily.org/joseph/javascript/md5.js"></script> -->
+  <script src="./resource/resmgr/Journal/issuu/js/moment.min.js"></script>
+  <script src="./resource/resmgr/Journal/issuu/js/moment-timezone-with-data-2012-2022.js"></script>
+  <script src="./resource/resmgr/Journal/issuu/js/kba.issuu.bookmarks.js"></script>
+
+</head>
+
+<body>
+  <header class="container">
+    <h1>KS Bar Association Issuu Publications</h1>
+  </header>
+  <section id="mainContent" class="container">
+    <div class="pull-right" style="margin-left: 20px;">
+      <label for="access">Privacy: </label>
+      <select id="access" onchange="loadLists()">
+      <option value="public">Public Only</option>
+      <option value="private" selected>Private Only</option>
+      <option value="" >All</option>
+      </select>
+    </div>
+    <select id="stackOrder" onchange="loadLists()" style="float: right;">
+      <option value="asc" selected>A -> Z</option>
+      <option value="desc" >Z -> A</option>
+      </select>
+    <select id="stackSort" onchange="loadLists()" style="float: right;">
+      <option value="name">Name</option>
+      <option value="created">Created</option>
+      <!-- <option value="description">Description</option>
+      <option value="folderId">Folder ID</option>
+      <option value="items">Items</option>
+      <option value="username">Username</option> -->
+    </select>
+
+    <a name="stacks"></a>
+    <h2>Stacks</h2>
+    <div id="stream-list-folder" class="stream-list ui-stream">
+
+    </div>
+    <a name="bookmarks"></a>
+    <div id="bookmarks-wrap" class="hidden">
+      <h2>Bookmarks</h2>
+      <div id="stream-list-bookmarks" class="stream-list ui-stream">
+      </div>
+    </div>
+
+    <a name="publications"></a>
+    <h2>Publication Listing</h2>
+    <label for="publication-count">Count</label>
+    <select id="publication-count" onchange="loadLists()">
+      <option value="1">1</option>
+      <option value="10" selected>10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+      <option value="25">25</option>
+      <option value="30">30</option>
+    </select>
+    <div id="publications-wrap">
+      <div id="stream-list" class="ui-stream">
+
+      </div>
+    </div>
+    <!--<pagination page="currentPage" max-size="maxSize" total-items="totalItems" items-per-page="entryLimit" boundary-links="true" rotate="false" style="cursor:pointer">
+      </pagination> -->
+    <div id="pages" class="pagination">
+
+    </div>
+
+    <!-- http://search.issuu.com/api/2_0/page?q=jamie&documentId=090224121313-2f028222e017481ba99f3ba2800c8167 -->
+    <h2>Search</h2>
+    <form name="searchDocs" action="">
+      <input type="text" name="q" size="40" maxlength="256" placeholder="lawyer" value=""><br>
+      <input type="" name="documentId" size="50" value="111018165621-015a716e35a44e97a8b1668a4d502113"><br>
+      <input type="submit" name="search_button" value="Search" class="btn btn-danger">
+    </form>
+
+    <div id="resultForm"></div>
+
+    <div class="example">
+      <h3>Feed Example</h3>
+      <p>http://feed.issuu.com/folder/[folderId]/rss20.jsonp</p>
+      <pre>http://feed.issuu.com/folder/8deae91d-c394-4254-914e-3656ff604e5d/rss20.jsonp</pre>
+      <div id="rss-example"></div>
+    </div>
+
+    <p>Src: <a href="https://developers.issuu.com/" target="_blank">http://developers.issuu.com/</a></p>
+    <p>API Endpoint:</p>
+    <pre>
+http://api.issuu.com/1_0?apiKey=apiKey&signature=signature&action=method
+</pre>
+    <p>Method = GET || POST</p>
+
+    <!-- <link rel="alternate" type="application/json+oembed" href="https://issuu.com/oembed?url=https%3A%2F%2Fissuu.com%2Fiscience%2Fdocs%2Fissue23&format=json" title="I, Science - Issue 23 (Winter 2012/13)">
+<link rel="alternate" type="text/xml+oembed" href="https://issuu.com/oembed?url=https%3A%2F%2Fissuu.com%2Fiscience%2Fdocs%2Fissue23&format=xml" title="I, Science - Issue 23 (Winter 2012/13)">
+
+-->
+  </section>
+  <div id="footer" class="container">
+    &copy; 2017 | <a href="http://www.ksbar.org/" target="_blank">Kansas Bar Association</a>
+
+  </div>
+  </div>
+</body>
+
+</html>
