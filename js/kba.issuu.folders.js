@@ -4,8 +4,8 @@ var i, argFolders, signature, sigFormula, title, keywordFilter, itemName, format
 /* ***************************************** */
 /*          Global Variables/Constants       */
 /* ***************************************** */
-const apiKey = '78zlafx4x3pgyed8ebyeqz276s4p40lw';
-const apiSecret = 'vf8ojy3rzn71r2af8ioqdycg1x8i4yr6';
+const apiKey = 'xvzi2sp3ho8bsfa9lgh9lc04xukltas4';  /* please use your own at: https://issuu.com/home/settings/apikey */
+const apiSecret = 'ughisr4bnhm1yus5ohlw1mhwx31wwgge'; /* please use your own at: https://issuu.com/home/settings/apikey */
 const endpoint = 'https://api.issuu.com/1_0?';
 const pageBlock = '#pages'; // the ID of the pagination //pagination(total, items, page)
 const listingBlock = '#stream-list';
